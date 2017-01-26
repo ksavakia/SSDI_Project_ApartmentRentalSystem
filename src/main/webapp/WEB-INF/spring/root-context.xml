@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<bean id="imageDao" class="org.apartments.uncc.dao.impl.ImageDaoImpl"> 
+	  <property name="dataSource" ref="dataSource" />
+	 </bean>	
+	
+	<bean id="registrationDelegate" class="org.apartments.uncc.delegate.RegistrationDelegate">
+		<property name="userService" ref="userService"></property>
+	</bean>
+	
+	<bean id="mailDelegate" class="org.apartments.uncc.delegate.MailDelegate">
+		<property name="userService" ref="userService"></property>
+	</bean>
+		
+	<bean id="loginDelegate" class="org.apartments.uncc.delegate.LoginDelegate">
+		<property name="userService" ref="userService"></property>
+	</bean>
+
+	<bean id="userService" class="org.apartments.uncc.service.impl.UserServiceImpl">
+		<property name="userDao" ref="userDao"></property>
+		<property name="codeGenerator" ref="codeGenerator"></property>
+		<property name="sendMail" ref="sendMail"></property>
+	</bean>
+
+	<bean name="userDao" class="org.apartments.uncc.dao.impl.UserDaoImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/SSDI_08?autoReconnect=true&amp;useSSL=false" />
+		<property name="username" value="root" />
+		<property name="password" value="" />
+	</bean>
+	
+	<bean id="codeGenerator" class="org.apartments.uncc.utilities.impl.CodeGeneratorImpl">
+	
+	</bean>
+	
+	
+		
+	<bean id="apartmentListDelegate" class="org.apartments.uncc.delegate.ApartmentListDelegate">
+		<property name="apartmentService" ref="apartmentService"></property>
+	</bean>
+	
+	<bean id="ownerDelegate" class="org.apartments.uncc.delegate.OwnerDelegate">
+		<property name="apartmentService" ref="apartmentService"></property>
+	</bean>
+
+	<bean id="apartmentService" class="org.apartments.uncc.service.impl.ApartmentServiceImpl">
+		<property name="apartmentDao" ref="apartmentDao"></property>
+		<property name="fileUploader" ref="fileUploader"></property>
+		<property name="filePath" ref="filePath"></property>
+	</bean>
+
+	<bean name="apartmentDao" class="org.apartments.uncc.dao.impl.ApartmentDaoImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean name="fileUploader" class="org.apartments.uncc.utilities.impl.FileUpload">
+		<property name="filePath" ref="filePath"></property>
+	</bean>
+	
+	<bean name="filePath" class="org.apartments.uncc.utilities.impl.FilePathLocator">
+		<property name="apartmentDao" ref="apartmentDao"></property>
+	</bean>
+	
+	<bean name="apartmentDetailsDelegate" class="org.apartments.uncc.delegate.ApartmentDetailsDelegate">
+		<property name="apartmentService" ref="apartmentService"></property>
+	</bean>
+	
+	
+	<bean name="sendMail" class="org.apartments.uncc.utilities.impl.SendEmailUtilityImpl">
+		<property name="mailSender" ref="mailSender"></property>
+		<property name="templateMessage" ref="templateMessage"></property>
+	</bean>
+	
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	    <property name="host" value="smtp.gmail.com"/>
+	    <property name="port" value="587" />
+		<property name="username" value="ssdispring@gmail.com" />
+		<property name="password" value="ssditeam08" />
+		<property name="javaMailProperties">
+		   <props>
+	       	      <prop key="mail.smtp.auth">true</prop>
+	       	      <prop key="mail.smtp.starttls.enable">true</prop>
+	       	   </props>
+		</property>
+	</bean>
+	
+	<!-- this is a template message that we can pre-load with default state -->
+	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
+	    <property name="from" value="customerservice_offcampusliving@apts.com"/>
+	    <property name="subject" value="Welcome to off campus living!!"/>
+	</bean>
+	
+		
+	<bean id="forumQuestionDelegate" class="org.apartments.uncc.delegate.ForumQuestionDelegate">
+		<property name="questionService" ref="questionService"></property>
+	</bean>
+
+	<bean id="questionService" class="org.apartments.uncc.service.impl.ForumQuestionServiceImpl">
+		<property name="questionDao" ref="questionDao"></property>
+	</bean>
+
+	<bean name="questionDao" class="org.apartments.uncc.dao.impl.ForumQuestionsDaoImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean id="forumAnswerDelegate" class="org.apartments.uncc.delegate.ForumAnswerDelegate">
+		<property name="forumAnswerService" ref="forumAnswerService"></property>
+	</bean>
+
+	<bean id="forumAnswerService" class="org.apartments.uncc.service.impl.ForumAnswerServiceImpl">
+		<property name="answersDao" ref="answersDao"></property>
+	</bean>
+
+	<bean name="answersDao" class="org.apartments.uncc.dao.impl.ForumAnswersDaoImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean id="adminDelegate" class="org.apartments.uncc.delegate.AdminDelegate">
+		<property name="adminService" ref="adminService"></property>
+	</bean>
+
+	<bean id="adminService" class="org.apartments.uncc.service.impl.AdminServiceImpl">
+		<property name="adminDao" ref="adminDao"></property>
+	</bean>
+
+	<bean name="adminDao" class="org.apartments.uncc.dao.impl.AdminDaoImpl">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+</beans>
